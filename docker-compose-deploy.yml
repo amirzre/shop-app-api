@@ -1,0 +1,58 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: app
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    restart: always
+    volumes:
+      - static-data:/vol/web
+      - media-data:/vol/media
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    networks:
+      - main
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres
+    image: postgres:14-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    networks:
+      - main
+
+  proxy:
+    container_name: nginx
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 80:8000
+    volumes:
+      - static-data:/vol/static
+      - media-data:/vol/media
+    networks:
+      - main
+
+
+networks:
+  main:
+
+volumes:
+  postgres-data:
+  static-data:
+  media-data:

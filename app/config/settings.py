@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Local App
     'core.apps.CoreConfig',
     'user.apps.UserConfig',
+    'product.apps.ProductConfig',
     # Third-Party App
     'rest_framework',
     'rest_framework_simplejwt',
@@ -146,7 +147,7 @@ MEDIA_ROOT = '/vol/web/media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'user.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

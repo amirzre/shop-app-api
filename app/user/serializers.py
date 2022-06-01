@@ -1,16 +1,13 @@
 from django.contrib.auth import get_user_model
-
 from rest_framework import serializers
-
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     """Serializer for create user object"""
-
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'name')
+        fields = ('id', 'email', 'password', 'name')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validate_data):
@@ -29,7 +26,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserSerializerWithToken(CreateUserSerializer):
+class UserSerializerWithToken(UserSerializer):
     """Serializer for create user object with token"""
     token = serializers.SerializerMethodField(read_only=True)
 
@@ -43,15 +40,3 @@ class UserSerializerWithToken(CreateUserSerializer):
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
-
-
-class RetrieveUpdateUserSerializer(serializers.ModelSerializer):
-    """Serializer for the user authentication object"""
-
-    class Meta:
-        model = get_user_model()
-        fields = (
-            'id', 'email', 'password', 'name', 'is_active',
-            'is_superuser', 'is_staff',
-        )
-        extra_kwargs = {'id': {'read_only': True}}

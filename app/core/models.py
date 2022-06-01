@@ -1,16 +1,29 @@
+import uuid
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from core.managers import UserManager
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    """Custom user model that supports using email inseted of username"""
-    email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+class TimeStampedModel(models.Model):
+    """Time stamp fields for other models"""
+    created = models.DateTimeField(db_index=True, auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
-    objects = UserManager()
+    class Meta:
+        abstract = True
 
-    USERNAME_FIELD = 'email'
 
+class Extensions(models.Model):
+    """Best practice for lookup field pk"""
+    uuid = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class UUIDModel(models.Model):
+    """Lookup field pk"""
+    uuid = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True

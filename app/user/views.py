@@ -1,13 +1,10 @@
 from rest_framework import generics, permissions
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
-from core.models import User
+from user.models import User
 from user.serializers import (
-    CreateUserSerializer,
+    UserSerializer,
     UserSerializerWithToken,
-    RetrieveUpdateUserSerializer
 )
 
 
@@ -28,18 +25,18 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system"""
-    serializer_class = CreateUserSerializer
+    serializer_class = UserSerializer
 
 
 class ListProfilesUserView(generics.ListAPIView):
     """Retrieve all users"""
-    serializer_class = RetrieveUpdateUserSerializer
+    serializer_class = UserSerializer
     permission_classes = (permissions.IsAdminUser,)
     queryset = User.objects.all()
 
 
 class ProfileUserView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update and delete user profile"""
-    serializer_class = RetrieveUpdateUserSerializer
+    serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
     queryset = User.objects.all()
