@@ -20,7 +20,7 @@ from product.models import Category, Product, Review, ProductViews
 
 class CategoryListAPIView(ListAPIView):
     """List of all categories"""
-    permission_classes = [AllowAny, ]
+    permission_classes = (AllowAny,)
     serializer_class = CategorySerializer
     filter_backends = (
         DjangoFilterBackend,
@@ -127,7 +127,7 @@ class RetrieveUpdateDestroyProductApiView(RetrieveUpdateDestroyAPIView):
 
 class RetrieveTopProductApiView(ListAPIView):
     """Retrieve 5 top products"""
-    permission_classes = (AllowAny)
+    permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
         products = Product.objects.filter(views__gt=4)[0:5]
